@@ -17,7 +17,7 @@ func load_repo(dirname string, ch chan<- Repo) error {
 		return err
 	}
 
-	ch <- Repo{dirname, *r}
+	ch <- Repo{dirname, r}
 	return nil
 }
 

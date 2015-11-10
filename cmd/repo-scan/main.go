@@ -12,9 +12,9 @@ const (
 func main() {
 	var depth uint = REPO_SCAN_DEPTH
 	excludes := []string{".repo", "downloads"}
-	m := manifest.Manifest{}
+	m := manifest.NewManifest(nil)
 
 	for r := range tree.Scan(".", depth, excludes) {
-		m.AddProjecter(r)
+		m.AddProjectByPath(r.Path, r.Repository)
 	}
 }

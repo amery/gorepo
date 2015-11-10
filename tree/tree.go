@@ -5,6 +5,6 @@ import (
 )
 
 type Repo struct {
-	path       string
-	repository git.Repository
+	Path       string
+	Repository *git.Repository
 }
