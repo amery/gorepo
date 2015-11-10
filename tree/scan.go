@@ -36,16 +36,17 @@ func readdirnames(dirname string) ([]string, error) {
 	return names, nil
 }
 
-func scan_children(dirname string, names []string, depth uint, result chan<- Repo) error {
+func scan_children(dirname string, names []string, result chan<- Repo,
+	depth uint, exclude map[string]bool) error {
 	var wg sync.WaitGroup
 
 	for _, fn := range names {
-		if fn != ".repo" {
-			name := path.Join(dirname, fn)
+		name := path.Join(dirname, fn)
 
+		if !exclude[name] {
 			wg.Add(1)
 			go func() {
-				scan(name, depth, result)
+				scan(name, result, depth, exclude)
 				defer wg.Done()
 			}()
 		}
@@ -55,17 +56,17 @@ func scan_children(dirname string, names []string, depth uint, result chan<- Rep
 	return nil
 }
 
-func scan(name string, depth uint, result chan<- Repo) error {
+func scan(name string, result chan<- Repo,
+	depth uint, exclude map[string]bool) error {
 	// don't follow symlinks
 	info, err := os.Lstat(name)
 	if err != nil {
 		return err
-	} else if info.Name() == ".repo" {
-		return nil // skip
 	} else if info.Name() == ".git" {
 		// regular working copy
 		if SUPPORTS_NESTED {
 			// skip to avoid duplication
+			// TODO: be smarter, compare with parent
 			return nil
 		} else {
 			return load_repo(name, result)
@@ -79,16 +80,22 @@ func scan(name string, depth uint, result chan<- Repo) error {
 				return err
 			}
 
-			return scan_children(name, names, depth-1, result)
+			return scan_children(name, names, result, depth-1, exclude)
 		}
 	}
 	return nil
 }
 
-func Scan(dirname string, depth uint) chan Repo {
+func Scan(dirname string, depth uint, exclude []string) chan Repo {
 	result := make(chan Repo, 10)
+	m := map[string]bool{}
+
+	for _, s := range exclude {
+		m[s] = true
+	}
+
 	go func() {
-		scan(dirname, depth, result)
+		scan(dirname, result, depth, m)
 		close(result)
 	}()
 	return result
