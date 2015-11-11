@@ -6,11 +6,11 @@ import (
 )
 
 const (
-	REPO_SCAN_DEPTH = 6
+	REPO_LIST_SCAN_DEPTH = 6
 )
 
 func repo_list() int {
-	var depth uint = REPO_SCAN_DEPTH
+	var depth uint = REPO_LIST_SCAN_DEPTH
 	excludes := []string{".repo"}
 	ret := 1
 
