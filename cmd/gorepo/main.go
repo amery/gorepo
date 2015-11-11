@@ -18,16 +18,14 @@ func main() {
 	arg0 = path.Base(os.Args[0])
 	args = os.Args[1:]
 
-	if strings.HasPrefix(cmd, "repo-") {
+	if strings.HasPrefix(arg0, "repo-") {
 		cmd = arg0[5:]
-	} else if strings.HasPrefix(cmd, "gorepo-") {
+	} else if strings.HasPrefix(arg0, "gorepo-") {
 		cmd = arg0[7:]
 	} else if len(args) > 0 && !strings.HasPrefix(args[0], "-") {
 		// cmd via first argument, no prefix and not starting with a dash
 		cmd = args[0]
 		args = args[1:]
-	} else {
-		cmd = ""
 	}
 
 	// is cmd an alias?
