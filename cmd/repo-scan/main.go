@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/amery/repo-tools/manifest"
-	"github.com/amery/repo-tools/tree"
+	"github.com/amery/gorepo/manifest"
+	"github.com/amery/gorepo/tree"
 )
 
 const (
