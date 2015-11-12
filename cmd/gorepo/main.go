@@ -10,6 +10,28 @@ import (
 var repo_commands = make(map[string]func() int)
 var repo_aliases = make(map[string][]string)
 
+func usage() {
+	fmt.Fprintf(os.Stderr, "Usage: %s <command> [options] arguments...\n", os.Args[0])
+
+	fmt.Fprintf(os.Stderr, "\nCommands:\n")
+	if len(repo_commands) > 0 {
+		for cmd := range repo_commands {
+			fmt.Fprintf(os.Stderr, "\t%s\n", cmd)
+		}
+	} else {
+		fmt.Fprintf(os.Stderr, "\t%s\n", "none registered")
+	}
+
+	if len(repo_aliases) > 0 {
+		fmt.Fprintf(os.Stderr, "\nAliases:\n")
+		for alias, cmd := range repo_aliases {
+			fmt.Fprintf(os.Stderr, "\t%s\t= %v\n", alias, cmd)
+		}
+	}
+
+	os.Exit(1)
+}
+
 func main() {
 	var cmd, arg0 string
 	var args []string
@@ -48,6 +70,5 @@ func main() {
 	}
 
 	// help
-	fmt.Fprintf(os.Stderr, "Usage: %s <command> [options] arguments...\n", arg0)
-	os.Exit(1)
+	usage()
 }
