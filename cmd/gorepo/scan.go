@@ -14,7 +14,7 @@ func repo_scan() int {
 	excludes := []string{".repo", "downloads"}
 	m := manifest.NewManifest(nil)
 
-	for r := range tree.Scan(".", depth, excludes) {
+	for r := range tree.Scan(".", depth, int(depth/2), excludes) {
 		m.AddProjectByPath(r.Path, r.Repository)
 	}
 

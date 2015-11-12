@@ -14,7 +14,7 @@ func repo_list() int {
 	excludes := []string{".repo"}
 	ret := 1
 
-	for r := range tree.Scan(".", depth, excludes) {
+	for r := range tree.Scan(".", depth, int(depth/2), excludes) {
 		fmt.Printf("%s\n", r.Path)
 		ret = 0
 	}
